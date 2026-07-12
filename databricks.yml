@@ -1,0 +1,40 @@
+# Databricks Asset Bundle definition
+# Docs: https://docs.databricks.com/dev-tools/bundles/index.html
+bundle:
+  name: customer_etl
+
+# Build the Python wheel from pyproject.toml on every deploy
+artifacts:
+  default:
+    type: whl
+    build: python3 -m build --wheel
+    path: .
+
+# Pull in job definitions from resources/
+include:
+  - resources/*.yml
+
+# Variables you can override per target or at deploy time
+variables:
+  catalog:
+    description: Unity Catalog catalog for output tables
+    default: workspace          # Free Edition default catalog; change to 'main' etc. if needed
+  schema:
+    description: Schema for bronze/silver/gold tables
+    default: customer_etl
+
+targets:
+  dev:
+    mode: development           # resources prefixed with your username, schedules paused
+    default: true
+    workspace:
+      host: https://dbc-d40d7b72-eeb2.cloud.databricks.com
+
+  prod:
+    mode: production
+    workspace:
+      host: https://dbc-d40d7b72-eeb2.cloud.databricks.com
+      root_path: /Workspace/Shared/.bundle/${bundle.name}/${bundle.target}
+    # In a real org, run prod as a service principal instead of a user:
+    # run_as:
+    #   service_principal_name: "your-sp-application-id"

@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "customer_etl"
+version = "1.0.0"
+description = "Sample production-style PySpark ETL deployed with Databricks Asset Bundles"
+requires-python = ">=3.10"
+authors = [{ name = "Anjaiah Methuku" }]
+dependencies = []   # pyspark is provided by the Databricks runtime — never pin it here
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0", "pyspark>=3.5", "build"]
+
+[project.scripts]
+# This is what python_wheel_task's entry_point refers to
+main = "customer_etl.main:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

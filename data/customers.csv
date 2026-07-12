@@ -1,0 +1,11 @@
+customer_id,name,email,country,signup_date,total_spend
+1001,Ravi Kumar,ravi.kumar@example.com,IN,2024-03-15,1250.50
+1002,Sarah Chen,sarah.chen@example.com,US,2024-05-02,890.00
+1003,James Miller,james.miller@example.com,US,2024-01-20,2340.75
+1004,Priya Sharma,priya.sharma@example.com,IN,2024-07-11,450.25
+1005,Anna Kowalski,,PL,2024-02-28,675.00
+1006,Luis Garcia,luis.garcia@example.com,MX,2024-06-09,-99.99
+1007,Emma Wilson,emma.wilson@example.com,GB,2024-04-17,1580.30
+1003,James Miller,james.miller@example.com,US,2024-01-20,2340.75
+1008,Yuki Tanaka,yuki.tanaka@example.com,JP,2024-08-01,320.45
+1009,Mohamed Ali,mohamed.ali@example.com,EG,2024-09-22,1105.60

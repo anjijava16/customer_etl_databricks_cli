@@ -1,0 +1,50 @@
+resources:
+  jobs:
+    customer_etl_job:
+      name: customer-etl-medallion
+
+      # Paused daily schedule in dev (development mode pauses it automatically);
+      # unpause / rely on it in prod.
+      schedule:
+        quartz_cron_expression: "0 0 6 * * ?"
+        timezone_id: UTC
+        pause_status: PAUSED
+
+      email_notifications:
+        on_failure:
+          - ${workspace.current_user.userName}
+
+      tasks:
+        - task_key: run_customer_etl
+          python_wheel_task:
+            package_name: customer_etl
+            entry_point: main
+            parameters:
+              - "--data-path"
+              - "file:${workspace.file_path}/data/customers.csv"
+              - "--catalog"
+              - "${var.catalog}"
+              - "--schema"
+              - "${var.schema}"
+          # Serverless compute (works on Free Edition / trial workspaces):
+          environment_key: default
+
+      environments:
+        - environment_key: default
+          spec:
+            client: "2"
+            dependencies:
+              - ../dist/*.whl
+
+      # --- Alternative: classic job cluster (if your workspace supports it) ---
+      # Replace `environment_key: default` on the task with
+      # `job_cluster_key: etl_cluster`, add `libraries: [{whl: ../dist/*.whl}]`
+      # to the task, delete the `environments` block, and add:
+      #
+      # job_clusters:
+      #   - job_cluster_key: etl_cluster
+      #     new_cluster:
+      #       spark_version: "15.4.x-scala2.12"
+      #       node_type_id: "m5d.large"        # AWS; use Standard_D4ds_v5 on Azure
+      #       num_workers: 1
+      #       data_security_mode: SINGLE_USER
