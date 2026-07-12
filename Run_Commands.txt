@@ -1,0 +1,63 @@
+
+
+Warning: 'databricks auth env' is deprecated and will be removed in a future release.
+Error: resolve: /Users/welcome/.databrickscfg has no DEFAULT profile configured. Config: token=***, profile=DEFAULT. Env: DATABRICKS_TOKEN
+(.venv) (base) welcome@jaisairams-Laptop customer_etl % env | grep DATABRICKS
+DATABRICKS_TOKEN=dapi1d0d83557395a4db2e9f33b9dcc5e1f0
+(.venv) (base) welcome@jaisairams-Laptop customer_etl % unset DATABRICKS_TOKEN
+unset DATABRICKS_HOST
+unset DATABRICKS_CONFIG_PROFILE
+(.venv) (base) welcome@jaisairams-Laptop customer_etl % 
+(.venv) (base) welcome@jaisairams-Laptop customer_etl % 
+(.venv) (base) welcome@jaisairams-Laptop customer_etl % env | grep DATABRICKS 
+(.venv) (base) welcome@jaisairams-Laptop customer_etl % more /Users/welcome/.databrickscfg                                       
+; The profile defined in the DEFAULT section is to be used as a fallback when no profile is explicitly specified.
+[DEFAULT]
+
+[__settings__]
+auth_storage    = secure
+default_profile = dev
+
+[dev]
+host         = https://dbc-d40d7b72-eeb2.cloud.databricks.com
+account_id   = b7e5c6dc-bc2b-4b66-9a89-b79c19195e3f
+workspace_id = 2262041767304032
+auth_type    = databricks-cli
+(.venv) (base) welcome@jaisairams-Laptop customer_etl % databricks bundle validate -t dev  
+Name: customer_etl
+Target: dev
+Workspace:
+  Host: https://dbc-d40d7b72-eeb2.cloud.databricks.com
+  User: anjaiahspr@gmail.com
+  Path: /Workspace/Users/anjaiahspr@gmail.com/.bundle/customer_etl/dev
+
+Validation OK!
+(.venv) (base) welcome@jaisairams-Laptop customer_etl % databricks bundle deploy   -t dev 
+Building default...
+Uploading dist/customer_etl-1.0.0-py3-none-any.whl...
+Uploading bundle files to /Workspace/Users/anjaiahspr@gmail.com/.bundle/customer_etl/dev/files...
+Deploying resources...
+Updating deployment state...
+Deployment complete!
+(.venv) (base) welcome@jaisairams-Laptop customer_etl % databricks bundle run customer_etl_job -t dev 
+Run URL: https://dbc-d40d7b72-eeb2.cloud.databricks.com/jobs/651075540820783/runs/324464902175107?o=2262041767304032
+
+2026-07-11 21:21:53 "[dev anjaiahspr] customer-etl-medallion" RUNNING
+2026-07-11 21:23:47 "[dev anjaiahspr] customer-etl-medallion" TERMINATED SUCCESS
+[bronze] wrote 10 rows -> `workspace`.`customer_etl`.customers_bronze
+[silver] wrote 8 rows -> `workspace`.`customer_etl`.customers_silver
+[gold]   wrote 6 rows -> `workspace`.`customer_etl`.spend_by_country_gold
++-------+--------------+-----------+---------+
+|country|customer_count|total_spend|avg_spend|
++-------+--------------+-----------+---------+
+|US     |2             |3230.75    |1615.38  |
+|IN     |2             |1700.75    |850.38   |
+|GB     |1             |1580.3     |1580.3   |
+|EG     |1             |1105.6     |1105.6   |
+|PL     |1             |675.0      |675.0    |
+|JP     |1             |320.45     |320.45   |
++-------+--------------+-----------+---------+
+
+Customer ETL completed successfully.
+(.venv) (base) welcome@jaisairams-Laptop customer_etl % 
+
